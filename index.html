@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PomeCare - Pomegranate Orchard Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+</style>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="bg-green-600 text-white p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">PomeCare</h1>
+                <div class="flex items-center gap-4">
+                    <button class="p-2 hover:bg-green-700 rounded-full">
+                        <i class="bi bi-bell text-xl"></i>
+                    </button>
+                    <button class="p-2 hover:bg-green-700 rounded-full">
+                        <i class="bi bi-person-circle text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container mx-auto p-4">
+            <!-- Dashboard -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Orchard Summary -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold mb-4">Orchard Summary</h2>
+                    <div class="space-y-3">
+                        <p><i class="bi bi-tree"></i> Total Trees: <span id="treeCount">120</span></p>
+                        <p><i class="bi bi-calendar"></i> Average Age: <span>3 years</span></p>
+                        <p><i class="bi bi-heart"></i> Health Status: <span class="text-green-500">Good</span></p>
+                        <button onclick="addTree()" class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                            Add New Tree
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Prescriptions -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold mb-4">Latest Prescriptions</h2>
+                    <div class="space-y-4 custom-scrollbar max-h-64 overflow-y-auto">
+                        <div class="p-3 bg-gray-50 rounded">
+                            <p class="font-medium">Pesticide Treatment</p>
+                            <p class="text-sm text-gray-600">Mix 2ml/L water - Apply weekly</p>
+                            <p class="text-xs text-gray-500">Dr. Smith - 2 days ago</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded">
+                            <p class="font-medium">Fertilizer Schedule</p>
+                            <p class="text-sm text-gray-600">NPK 19-19-19 (500g/tree)</p>
+                            <p class="text-xs text-gray-500">Dr. Johnson - 1 week ago</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Irrigation Schedule -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold mb-4">Water Management</h2>
+                    <div id="irrigationSchedule" class="space-y-3">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Calendar -->
+            <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Upcoming Tasks</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="taskList">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Add New Record Form -->
+            <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Add New Record</h2>
+                <form id="recordForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Record Type</label>
+                            <select class="w-full p-2 border rounded" required>
+                                <option value="prescription">Prescription</option>
+                                <option value="irrigation">Irrigation Schedule</option>
+                                <option value="task">Task</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Date</label>
+                            <input type="date" class="w-full p-2 border rounded" required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium mb-1">Description</label>
+                            <textarea class="w-full p-2 border rounded" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                        Save Record
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize tree count
+        let treeCount = 120;
+
+        // Function to add new tree
+        function addTree() {
+            treeCount++;
+            document.getElementById('treeCount').textContent = treeCount;
+        }
+
+        // Initialize irrigation schedule
+        const irrigationSchedule = [
+            { day: 'Monday', time: '6:00 AM', duration: '2 hours' },
+            { day: 'Thursday', time: '6:00 AM', duration: '2 hours' },
+            { day: 'Saturday', time: '6:00 AM', duration: '2 hours' }
+        ];
+
+        // Populate irrigation schedule
+        function displayIrrigationSchedule() {
+            const scheduleContainer = document.getElementById('irrigationSchedule');
+            scheduleContainer.innerHTML = irrigationSchedule.map(schedule => `
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">${schedule.day}</p>
+                        <p class="text-sm text-gray-600">${schedule.time} - ${schedule.duration}</p>
+                    </div>
+                    <i class="bi bi-droplet text-blue-500"></i>
+                </div>
+            `).join('');
+        }
+
+        // Initialize tasks
+        const tasks = [
+            { title: 'Apply Fertilizer', date: '2024-01-20', priority: 'high' },
+            { title: 'Pruning', date: '2024-01-22', priority: 'medium' },
+            { title: 'Pest Inspection', date: '2024-01-25', priority: 'low' }
+        ];
+
+        // Populate task list
+        function displayTasks() {
+            const taskContainer = document.getElementById('taskList');
+            taskContainer.innerHTML = tasks.map(task => `
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-medium">${task.title}</h3>
+                        <span class="px-2 py-1 text-xs rounded ${
+                            task.priority === 'high' ? 'bg-red-100 text-red-800' :
+                            task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-green-100 text-green-800'
+                        }">${task.priority}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">${task.date}</p>
+                </div>
+            `).join('');
+        }
+
+        // Form submission handler
+        document.getElementById('recordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Record saved successfully!');
+            this.reset();
+        });
+
+        // Initialize the display
+        displayIrrigationSchedule();
+        displayTasks();
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
